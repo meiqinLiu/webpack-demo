@@ -5,9 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: './src/main.js',
     output: {
-        path: path.resolve(__dirname,'dist'),
-        filename: 'static/js/main.js',
-        clean: true,
+        // path: path.resolve(__dirname,'../dist'),
+        filename: undefined,
+        // clean: true,
     },
     module: {
         rules: [
@@ -54,12 +54,17 @@ module.exports = {
     },
     plugins: [
         new ESLintPlugin({
-            context: path.resolve(__dirname,'src')
+            context: path.resolve(__dirname,'../src')
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'public/index.html')
+            template: path.resolve(__dirname, '../public/index.html')
         }),
     ],
-    devtool: 'inline-source-map',
+    devServer: {
+        host: 'localhost',
+        port: 8080,
+        open: true,
+    },
+    devtool: 'cheap-module-source-map', // 开发模式下使用
     mode: 'development',
 }

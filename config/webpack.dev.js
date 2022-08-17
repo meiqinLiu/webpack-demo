@@ -2,6 +2,8 @@ const path = require('path')
 const ESLintPlugin = require('eslint-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const threads = require('os').cpus().length -1; // 电脑cup数量-1
+
 module.exports = {
     entry: './src/main.js',
     output: {
@@ -43,18 +45,32 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
-                use: {
-                  loader: 'babel-loader',
-                //   options: {
-                //     presets: ['@babel/preset-env']
-                //   }
-                }
+                use: [
+                   {
+                    loader: 'thread-loader',
+                    options: {
+                        workers: threads, // 进程数量
+                    }
+                   },
+                   {
+                    loader: 'babel-loader', // 耗时的 loader使用多线程 （例如 babel-loader）
+                    options: {
+                      // presets: ['@babel/preset-env'], // 配置到bebel.config.js文件里
+                      cacheDirectory: true, // babel缓存
+                      cacheCompression: false, // 压缩
+                    }
+                  }
+                ]
               }
         ]
     },
     plugins: [
         new ESLintPlugin({
-            context: path.resolve(__dirname,'../src')
+            context: path.resolve(__dirname,'../src'),
+            exclude: 'node_modules', // 默认值
+            cache: true, // 开启缓存
+            cacheLocation: path.resolve(__dirname,'../node_modules/.cache/eslintcache'),
+            threads, // 开启多进程和进程数量
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../public/index.html')

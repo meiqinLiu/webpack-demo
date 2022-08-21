@@ -58,6 +58,7 @@ module.exports = {
                       // presets: ['@babel/preset-env'], // 配置到bebel.config.js文件里
                       cacheDirectory: true, // babel缓存
                       cacheCompression: false, // 压缩
+                      plugins: ['@babel/plugin-transform-runtime'] // 使所有辅助代码从这里引用
                     }
                   }
                 ]

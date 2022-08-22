@@ -8,8 +8,9 @@ module.exports = {
     entry: './src/main.js',
     output: {
         // path: path.resolve(__dirname,'../dist'),
-        filename: undefined,
-        // clean: true,
+        filename: 'static/js/[name].js', // 入口文件打包输入文件名
+        chunkFilename: 'static/js/[name].chunk.js', // 其他chunk文件命名,动态引入或者node_modules代码;加chunk后缀区分主文件
+        assetModuleFilename: 'static/asset/[name].[ext]', // 针对type=asset资源的输出处理
     },
     module: {
         rules: [
@@ -30,17 +31,17 @@ module.exports = {
                     }
                 },
                 // 资源的输入
-                generator: {
-                    filename: 'static/images/[hash][ext]',
-                }
+                // generator: {
+                //     filename: 'static/images/[hash][ext]',
+                // }
             },
            {
                 test: /\.(ttf|woff2?|mp3|mp4|avi)$/,  
                 type: 'asset/resource',
-                // 资源的输入
-                generator: {
-                    filename: 'static/font/[hash][ext]',
-                }
+                // // 资源的输入
+                // generator: {
+                //     filename: 'static/font/[hash][ext]',
+                // }
             },
             {
                 test: /\.js$/,

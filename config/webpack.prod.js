@@ -11,7 +11,9 @@ module.exports = {
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname,'../dist'),
-        filename: 'static/js/main.js',
+        filename: 'static/js/[name].js', // 入口文件打包输入文件名
+        chunkFilename: 'static/js/[name].chunk.js', // 其他chunk文件命名,动态引入或者node_modules代码;加chunk后缀区分主文件
+        assetModuleFilename: 'static/asset/[name].[ext]', // 针对type=asset资源的输出处理
         clean: true,
     },
     module: {
@@ -50,17 +52,17 @@ module.exports = {
                         }
                     },
                     // 资源的输入
-                    generator: {
-                        filename: 'static/images/[hash][ext]',
-                    }
+                    // generator: {
+                    //     filename: 'static/images/[hash][ext]',
+                    // }
                 },
                {
                     test: /\.(ttf|woff2?|mp3|mp4|avi)$/,  
                     type: 'asset/resource',
                     // 资源的输入
-                    generator: {
-                        filename: 'static/font/[hash][ext]',
-                    }
+                    // generator: {
+                    //     filename: 'static/font/[hash][ext]',
+                    // }
                 },
                 {
                     test: /\.js$/,
@@ -100,7 +102,8 @@ module.exports = {
             template: path.resolve(__dirname, '../public/index.html')
         }),
         new MiniCssExtractPlugin({
-            filename: 'static/css/mystyle.css'
+            filename: 'static/css/[name].css',
+            chunkFilename: 'static/css/[name].chunk.css',
         }),
        
     ],
@@ -115,6 +118,12 @@ module.exports = {
           parallel: threads,
         }),
       ],
+      splitChunks: {
+        chunks: 'all',
+        // 其他使用默认配置
+        // 效果: mode_modules使用的代码会打包到verder文件
+        //      动态引入的js会被单独打包
+      }
     },
     devServer: {
         host: 'localhost',

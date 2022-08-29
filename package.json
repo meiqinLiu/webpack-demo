@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack server --config ./config/webpack.dev.js",
-    "build": "webpack --config ./config/webpack.prod.js"
+    "build": "webpack --config ./config/webpack.prod.js",
+    "server": "serve dist",
+    "server1": "http-server dist"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,7 @@
     "@babel/plugin-transform-runtime": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "babel-loader": "^8.2.5",
+    "core-js": "^3.25.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
     "eslint": "^8.22.0",
@@ -31,11 +34,13 @@
     "postcss": "^8.4.16",
     "postcss-loader": "^7.0.1",
     "postcss-preset-env": "^7.7.2",
+    "serve": "^14.0.1",
     "style-loader": "^3.3.1",
     "thread-loader": "^3.0.4",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.10.0"
+    "webpack-dev-server": "^4.10.0",
+    "workbox-webpack-plugin": "^6.5.4"
   },
   "browserslist": [
     "last 2 versions",

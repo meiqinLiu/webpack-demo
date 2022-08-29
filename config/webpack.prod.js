@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const threads = require('os').cpus().length -1; // 电脑cup数量-1
 
@@ -11,9 +12,9 @@ module.exports = {
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname,'../dist'),
-        filename: 'static/js/[name].js', // 入口文件打包输入文件名
-        chunkFilename: 'static/js/[name].chunk.js', // 其他chunk文件命名,动态引入或者node_modules代码;加chunk后缀区分主文件
-        assetModuleFilename: 'static/asset/[name].[ext]', // 针对type=asset资源的输出处理
+        filename: 'static/js/[name].[contenthash:10].js', // 入口文件打包输入文件名
+        chunkFilename: 'static/js/[name].chunk.[contenthash:10].js', // 其他chunk文件命名,动态引入或者node_modules代码;加chunk后缀区分主文件
+        assetModuleFilename: 'static/asset/[name].[contenthash:10].[ext]', // 针对type=asset资源的输出处理
         clean: true,
     },
     module: {
@@ -102,10 +103,15 @@ module.exports = {
             template: path.resolve(__dirname, '../public/index.html')
         }),
         new MiniCssExtractPlugin({
-            filename: 'static/css/[name].css',
-            chunkFilename: 'static/css/[name].chunk.css',
+            filename: 'static/css/[name].[contenthash:10].css',
+            chunkFilename: 'static/css/[name].chunk.[contenthash:10].css',
         }),
-       
+        new WorkboxPlugin.GenerateSW({
+          // 这些选项帮助快速启用 ServiceWorkers
+          // 不允许遗留任何“旧的” ServiceWorkers
+          clientsClaim: true,
+          skipWaiting: true,
+        }),
     ],
     optimization: {
       minimize: true,
@@ -123,6 +129,11 @@ module.exports = {
         // 其他使用默认配置
         // 效果: mode_modules使用的代码会打包到verder文件
         //      动态引入的js会被单独打包
+      },
+      // main.hash引入b.hash，b文件修改后hash值发生变化，mian引用的b.hash名称也发生变化，导致mian缓存失效
+      // 使用runtimeChunk文件映射引入的文件
+      runtimeChunk: {
+        name: (entrypoint) => `runtime~${entrypoint.name}`,
       }
     },
     devServer: {

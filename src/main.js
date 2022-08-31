@@ -50,6 +50,7 @@ if(module.hot){
 
 // 离线缓存，有兼容性问题
 if ('serviceWorker' in navigator) {
+    console.log('可u');
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js').then(registration => {
         console.log('SW registered: ', registration);
@@ -57,4 +58,8 @@ if ('serviceWorker' in navigator) {
         console.log('SW registration failed: ', registrationError);
       });
     });
-  }
+}else{
+    console.log('离线缓存失败');
+    console.log(navigator);
+}
+
